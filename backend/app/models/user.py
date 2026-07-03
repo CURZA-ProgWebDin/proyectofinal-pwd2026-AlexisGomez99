@@ -7,26 +7,39 @@ class User(BaseModel):
     __tablename__= 'users'
     name = db.Column(db.String(100), unique = True)
     email = db.Column(db.String(200), unique =True)
-    rol_id = db.Column(db.Integer, db.ForeignKey('roles.id'),)
     password = db.Column(db.String(255) )
+
+    rol_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
+    info_user_id = db.Column(db.Integer, db.ForeignKey('info_users.id'))
+
     rol = db.relationship('Rol', back_populates='users')
+    info_user = db.relationship('InfoUser', back_populates='user')
+    payments = db.relationship('Payment', back_populates='user')
+    routines = db.relationship('UserRoutine', back_populates='user')
+
     
      
-    def to_dict(self, with_roles=True):
-      data = {
-        'id':self.id,
-        'name':self.name,
-        'email':self.email,
-        'created_at':self.created_at,
-        'updated_at': self.updated_at,
-        'active': self.active
-      }
-      if with_roles:
-        data['rol']= self.rol.to_dict(with_users = False)
-      return data
+    def to_dict(self, with_roles=True, with_info=True, with_payments=True, with_routines=True):
+        data = {
+          'id':self.id,
+          'name':self.name,
+          'email':self.email,
+          'created_at':self.created_at,
+          'updated_at': self.updated_at,
+          'active': self.active
+        }
+        if with_roles:
+          data['rol']= self.rol.to_dict(with_users = False)
+        if with_info:
+          data['info']= self.info_user.to_dict(with_user = False)
+        if with_payments:
+          data['payments']= self.payments.to_dict(with_user = False)
+        if with_routines:
+          data['routines']= self.routines.to_dict(with_user= False)
+        return data
       
     def validate_password(self, password:str) -> bool:
-      return check_password_hash(self.password, password)
+        return check_password_hash(self.password, password)
     
     def generate_password(self, password:str):
-      self.password = generate_password_hash(password)
+        self.password = generate_password_hash(password)

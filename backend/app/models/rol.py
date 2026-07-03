@@ -19,6 +19,6 @@ class Rol(BaseModel):
             'active': self.active
         }
         if with_users:
-            data['users'] = [user.to_dict(with_roles=False) for user in self.users]
+            data['users'] = [user.to_dict(with_roles=False,with_info=False,with_payments=False) for user in self.users]
         return data
     

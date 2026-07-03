@@ -2,6 +2,10 @@ from dotenv import load_dotenv
 from flask_cors import CORS
 from app.models import db
 from app.config import config
+from app.models import info_user
+from app.models import payment
+from app.models import routine
+from app.models import user_routine
 from app.routes import api_v1
 from flask_migrate import Migrate
 from flask_jwt_extended import JWTManager, create_access_token, get_jwt, get_jwt_identity
