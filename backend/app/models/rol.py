@@ -6,9 +6,6 @@ class Rol(BaseModel):
     __tablename__="roles"
     name = db.Column(db.String, unique = True)
     users = db.relationship('User', back_populates='rol')
-    
-    def __init__(self, nombre) -> None:
-        self.nombre = nombre
         
     def to_dict(self, with_users=True):
         data= {

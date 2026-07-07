@@ -8,8 +8,9 @@ class InfoUser(BaseModel):
     name = db.Column(db.String(100))
     last_name = db.Column(db.String(100))
     number_phone = db.Column(db.String(50))
-    adrees = db.Column(db.String(200))
-    
+    adress = db.Column(db.String(200))
+
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), unique=True)
     user = db.relationship('User', back_populates='info_user')
     
      
@@ -20,11 +21,11 @@ class InfoUser(BaseModel):
             'name':self.name,
             'last_name':self.last_name,
             'number_phone': self.number_phone,
-            'adrees': self.adrees,
+            'adress': self.adress,
             'created_at':self.created_at,
             'updated_at': self.updated_at,
             'active': self.active
         }
         if with_user:
-            data['rol']= self.rol.to_dict(with_info = False,with_payments = False)
+            data['user']= self.user.to_dict(with_info = False,with_payments = False)
         return data

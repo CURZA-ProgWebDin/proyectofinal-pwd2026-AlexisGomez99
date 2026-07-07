@@ -24,5 +24,5 @@ class Payment(BaseModel):
             'active': self.active
         }
         if with_user:
-            data['user']= self.user.to_dict(with_payments=False,with_roles=False)
+            data['user']= self.user.to_dict(with_payments=False,with_roles=False,with_routines=False)
         return data

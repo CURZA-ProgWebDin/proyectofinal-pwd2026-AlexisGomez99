@@ -10,7 +10,7 @@ class UserRoutine(BaseModel):
     routine_id = db.Column(db.Integer, db.ForeignKey('routines.id'), nullable=False)
     
     user = db.relationship('User', back_populates='routines')
-    routine = db.relationship('User', back_populates='user_routines')
+    routine = db.relationship('Routine', back_populates='user_routines')
     
     def to_dict(self, with_user=True, with_routine=True):
         data = {
@@ -24,7 +24,7 @@ class UserRoutine(BaseModel):
             'active': self.active
         }
         if with_user:
-            data['user']= self.user.to_dict(with_payments=False,with_roles=False,with_routine=False,with_info=False)
+            data['user']= self.user.to_dict(with_payments=False,with_roles=False,with_routines=False,with_info=False)
         if with_routine:
             data['routine']= self.routine.to_dict(with_user_routines=False)
         
