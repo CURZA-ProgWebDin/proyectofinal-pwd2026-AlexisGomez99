@@ -25,25 +25,32 @@ class UserController (Controller):
     
     @staticmethod
     def create(request:dict) -> tuple[Response, int]:
-        name= request.get('name')
-        email= request.get('email')
-        rol_id= request.get('rol_id')
+        name:str | None = request.get('name')
+        email:str | None = request.get('email')
+        password:str | None = request.get('password')
+        rol_id = request.get('rol_id')
         error :str | None = None
         if name is None:
-            error = 'El name es requerido'
+            error = 'El nombre es requerido'
         if email is None:
             error = 'El email es requerido'
+        if password is None:
+            error = 'La contraseña es requerida'
+        if rol_id is None:
+            error = 'El rol es requerido'
             
         if error is None:
             try:
-                user = User(name=name, email=email, rol_id=rol_id)
-                db.session.add(user)
-                db.session.commit()
-                return jsonify({'message': "usuario creado con exito"}), 201
+                if rol_id and name and password and email is not None:
+                    user = User(name=name, email=email, rol_id=rol_id, password=password)    
+                    user.generate_password(password)
+                    db.session.add(user)
+                    db.session.commit()
+                return jsonify({'message': "usuario creado con exito"}), 201               
+                
             except IntegrityError:
                 db.session.rollback()
                 return jsonify({'message': "Usuario ya registrado"}), 409
-        return jsonify ({'message': error}), 422
         
         
     @staticmethod
