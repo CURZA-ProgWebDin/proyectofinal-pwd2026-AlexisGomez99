@@ -66,8 +66,7 @@ class UserController (Controller):
             error = 'El email es requerido'
         if rol_id is None:
             error = 'El rol es requerido'
-        if active is None:
-            error = 'El estado es requerido'
+
             
         if error is None:
             usuario = db.session.get(User, id)

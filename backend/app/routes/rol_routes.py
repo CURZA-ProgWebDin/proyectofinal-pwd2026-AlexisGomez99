@@ -7,13 +7,13 @@ roles = Blueprint('roles', __name__, url_prefix='/roles')
 
 @roles.route('/')
 @jwt_required()
-@rol_access(['admin'])
+@rol_access(['admin','entrenador'])
 def get_all():
     return RolController.get_all()
 
 @roles.route('/<int:id>')
 @jwt_required()
-@rol_access(['admin'])
+@rol_access(['admin','entrenador'])
 def show(id):
     return RolController.show(id)
 

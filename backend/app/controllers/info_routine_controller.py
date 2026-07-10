@@ -15,6 +15,13 @@ class InfoRoutineController (Controller):
             info_routines_to_dict = [info_routine.to_dict() for info_routine in info_routines_list ]
             return jsonify(info_routines_to_dict), 200 
         return jsonify({"message": 'datos no encontrados'}), 404
+    @staticmethod
+    def get_me(id) -> tuple[Response, int]:
+        info_routines_list = db.session.execute(db.select(InfoRoutine).filter_by(user_id=id).order_by(db.desc(InfoRoutine.id))).scalars().all()
+        if len(info_routines_list) > 0:
+            info_routines_to_dict = [info_routine.to_dict() for info_routine in info_routines_list ]
+            return jsonify(info_routines_to_dict), 200 
+        return jsonify({"message": 'datos no encontrados'}), 404
     
     @staticmethod
     def show(id)->tuple[Response, int]:

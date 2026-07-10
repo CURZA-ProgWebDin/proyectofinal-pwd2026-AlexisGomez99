@@ -8,12 +8,12 @@ users = Blueprint('users', __name__, url_prefix='/users')
 
 @users.route('/')
 @jwt_required()
-@rol_access(['admin', 'operador'])
+@rol_access(['admin', 'operador','entrenador'])
 def get_all():
     return UserController.get_all()
 @users.route('/<int:id>')
 @jwt_required()
-@rol_access(['admin', 'operador'])
+@rol_access(['admin', 'operador','entrenador'])
 def show(id):
     return UserController.show(id)
 

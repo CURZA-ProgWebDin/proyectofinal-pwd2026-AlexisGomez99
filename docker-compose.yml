@@ -40,16 +40,17 @@ services:
       - pgadmin_data:/var/lib/pgadmin
     networks:
       - pwd_network 
-  frontend:
-    build: ./frontend
-    container_name: vuejs
-    volumes:
-      - ./frontend:/app
-    networks:
-      - pwd_network
-    ports:
-      - 5174:5173
-    command: sh -c "npm install && npm run dev  -- --host"
+     
+#  frontend:
+#    build: ./frontend
+#    container_name: vuejs
+#    volumes:
+#      - ./frontend:/app
+#    networks:
+#      - pwd_network
+#    ports:
+#      - 5174:5173
+#    command: sh -c "npm install && npm run dev  -- --host"
 volumes:
   pgdata:
   pgadmin_data:

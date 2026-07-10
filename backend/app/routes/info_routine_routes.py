@@ -11,6 +11,13 @@ info_routines = Blueprint('info_routines', __name__, url_prefix='/info_routines'
 @rol_access(['admin', 'operador'])
 def get_all():
     return InfoRoutineController.get_all()
+
+@info_routines.route('/my_routine/<int:id>')
+@jwt_required()
+@rol_access(['admin', 'operador'])
+def get_my_routine(id):
+    return InfoRoutineController.get_me(id)
+
 @info_routines.route('/<int:id>')
 @jwt_required()
 @rol_access(['admin', 'operador'])
