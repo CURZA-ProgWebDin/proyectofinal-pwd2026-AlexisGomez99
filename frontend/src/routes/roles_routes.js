@@ -3,7 +3,7 @@ export const roles = [{
     name: "Roles",
     component: () => import("../views/RolesView.vue"),
     meta: {
-        rol_access: ["admin"],
+        rol_access: ["admin","entrenador"],
         required_auth: true,
         orden: 900,
         menu: true

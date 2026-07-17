@@ -3,7 +3,7 @@ export const exercises = [{
     name: "Exercises",
     component: () => import("../views/ExercisesView.vue"),
     meta: {
-        rol_access: ["admin","entrenador"],
+        rol_access: ["admin","entrenador","creador"],
         required_auth: true,
         orden: 700,
         menu: true
@@ -14,7 +14,7 @@ export const exercises = [{
     component: () => import("../components/exercises/ExercisesCreate.vue"),
     name: "ExercisesCreate",
     meta: {
-        rol_access: ["admin","entrenador"],
+        rol_access: ["admin","entrenador","creador"],
         required_auth: true,
         orden: 701,
         menu: false
@@ -25,7 +25,7 @@ export const exercises = [{
     component: () => import("../components/exercises/ExercisesEdit.vue"),
     name: "ExercisesEdit",
     meta: {
-        rol_access: ["admin","entrenador"],
+        rol_access: ["admin","entrenador","creador"],
         required_auth: true,
         orden: 702,
         menu: false

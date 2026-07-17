@@ -10,7 +10,7 @@ const userStore = useUserStore();
 const { listUsers, destroy } = userStore;
 const router = useRouter();
 const { users } = storeToRefs(userStore);
-const { setUser } = userStore; 
+const { setUser } = userStore;
 const loading = ref(true);
 const list_users = computed(() => {
     if (users.value.length === 0) {
@@ -28,19 +28,22 @@ const list_users = computed(() => {
         });
     }
 });
-async function eliminarUsuario(user) {
-    loading.value= true;
+async function deleteUser(user) {
+    loading.value = true;
     await destroy(user.id);
     await listUsers();
-    loading.value= false;
+    loading.value = false;
 }
-function editarUsuario(user) {
+function editUser(user) {
     setUser(user)
     router.push({ name: 'UsersEdit' });
 }
+function getRoutinesFromUser(user_id){
+    router.push({ name: 'InfoRoutines', query: { user_id: user_id } });
+}
 onMounted(() => {
     listUsers();
-    loading.value=false
+    loading.value = false
 });
 </script>
 
@@ -59,7 +62,7 @@ onMounted(() => {
                 </button>
             </RouterLink>
         </div>
-        
+
         <template v-if="list_users.length === 0">
             <div class="empty-state">
                 <p>No se encontraron usuarios en la base de datos.</p>
@@ -68,10 +71,15 @@ onMounted(() => {
 
 
         <div v-else class="table-container">
-            <DataTable v-if="!loading" :data="list_users" :headers="['ID', 'NAME', 'EMAIL', 'ROL', 'ACTIVE']" class="custom-table"
-                @eliminar="eliminarUsuario" @editar="editarUsuario" />
-
-            <p v-else >"Cargando..."</p>
+            <DataTable v-if="!loading" :data="list_users" :headers="['ID', 'NAME', 'EMAIL', 'ROL', 'ACTIVE']"
+                class="custom-table" @eliminar="deleteUser" @editar="editUser">
+                <template #acciones-extra="{ id }">
+                    <button class="btn btn-info" @click="getRoutinesFromUser(id)" title="Ver Rutinas">
+                        <mdicon name="eye" size="18"></mdicon>
+                    </button>
+                </template>
+            </DataTable>
+            <p v-else>"Cargando..."</p>
         </div>
     </section>
 </template>
@@ -86,7 +94,25 @@ onMounted(() => {
     box-sizing: border-box;
 }
 
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 4px;
+  margin: 0 4px;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+  color: #ffffff;
+}
 
+.btn-info {
+  background-color: #17a2b8;
+}
+.btn-info:hover {
+  background-color: #138496;
+}
 .header-container {
     display: flex;
     justify-content: space-between;

@@ -18,6 +18,8 @@ def show(id):
     return RolController.show(id)
 
 @roles.route("/", methods=['POST'])
+@jwt_required()
+@rol_access(['admin'])
 def create():
     return RolController.create(request.get_json() or None)
 

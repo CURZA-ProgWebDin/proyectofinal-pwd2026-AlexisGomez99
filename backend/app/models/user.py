@@ -11,14 +11,13 @@ class User(BaseModel):
 
     rol_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
 
+    routines = db.relationship('Routine', back_populates='user')
     rol = db.relationship('Rol', back_populates='users')
     info_user = db.relationship('InfoUser', back_populates='user', uselist=False)
     payments = db.relationship('Payment', back_populates='user')
-    routines = db.relationship('UserRoutine', back_populates='user')
-
     
      
-    def to_dict(self, with_roles=True, with_info=True, with_payments=True, with_routines=True):
+    def to_dict(self, with_roles=True, with_info=True, with_payments=True, with_routine=True):
         data = {
           'id':self.id,
           'name':self.name,
@@ -33,8 +32,8 @@ class User(BaseModel):
           data['info']= self.info_user.to_dict(with_user = False) if self.info_user else None
         if with_payments:
           data['payments']= [payment.to_dict(with_user=False) for payment in self.payments]
-        if with_routines:
-          data['routines']= [routine.to_dict(with_user=False) for routine in self.routines]
+        if with_routine:
+          data['routine']= [routine.to_dict(with_user=False) for routine in self.routines]
         return data
       
     def validate_password(self, password:str) -> bool:

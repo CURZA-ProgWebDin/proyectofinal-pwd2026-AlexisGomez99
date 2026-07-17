@@ -8,18 +8,18 @@ payments = Blueprint('payments', __name__, url_prefix='/payments')
 
 @payments.route('/')
 @jwt_required()
-@rol_access(['admin', 'operador'])
+@rol_access(['admin', 'entrenador'])
 def get_all():
     return PaymentController.get_all()
 @payments.route('/<int:id>')
 @jwt_required()
-@rol_access(['admin', 'operador'])
+@rol_access(['admin', 'entrenador'])
 def show(id):
     return PaymentController.show(id)
 
 @payments.route("/", methods=['POST'])
 @jwt_required()
-@rol_access(['admin'])
+@rol_access(['admin', 'entrenador'])
 def create():
     return PaymentController.create(request.get_json() or None)
 
@@ -34,4 +34,4 @@ def update(id):
 @jwt_required()
 @rol_access(['admin'])
 def destroy(id):
-    return InfoUserController.destroy( id)
+    return PaymentController.destroy( id)

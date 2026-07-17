@@ -17,6 +17,14 @@ class RoutineController (Controller):
         return jsonify({"message": 'datos no encontrados'}), 404
     
     @staticmethod
+    def get_my_routines(id) -> tuple[Response, int]:
+        routines_list = db.session.execute(db.select(Routine).filter_by(user_id=id).order_by(db.desc(Routine.id))).scalars().all()
+        if len(routines_list) > 0:
+            routines_to_dict = [routine.to_dict() for routine in routines_list ]
+            return jsonify(routines_to_dict), 200 
+        return jsonify({"message": 'datos no encontrados'}), 404
+    
+    @staticmethod
     def show(id)->tuple[Response, int]:
         routine = db.session.get(Routine, id)
         if routine:
@@ -45,15 +53,19 @@ class RoutineController (Controller):
     @staticmethod
     def update(request, id)->tuple[Response, int]:
         name= request.get('name')
+        user_id = request.get('user_id')
         error :str | None = None
         if name is None:
             error = 'El nombre es requerido'
+        if user_id is None:
+            error = 'El usuario es requerido'
             
         if error is None:
             routine = db.session.get(Routine, id)
             if routine:
                 try:
                     routine.name = name
+                    routine.user_id = user_id
                     routine.updated_at = datetime.now()
                     db.session.commit()
                     return jsonify({'message':'rutina modificada con exito'}), 200

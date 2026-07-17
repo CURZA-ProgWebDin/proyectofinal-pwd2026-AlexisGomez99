@@ -27,5 +27,5 @@ class InfoUser(BaseModel):
             'active': self.active
         }
         if with_user:
-            data['user']= self.user.to_dict(with_info = False,with_payments = False)
+            data['user']= self.user.to_dict(with_info = False,with_payments = False, with_routine=False)
         return data

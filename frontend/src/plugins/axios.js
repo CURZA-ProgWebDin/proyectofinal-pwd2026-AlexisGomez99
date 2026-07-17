@@ -57,6 +57,7 @@ instance_auth.interceptors.response.use(
     }
 
     if (status === 403) {
+      notificationStore.create(backendMessage || "Conflicto", true, "warning");
       authStore.goHome();
     }
 

@@ -30,13 +30,13 @@ const list_exercises = computed(() => {
         });
     }
 });
-async function eliminarExercise(exercise) {
+async function deleteExercise(exercise) {
     loading.value= true;
     await destroy(exercise.id);
     await listExercises();
     loading.value= false;
 }
-function editarExercise(exercise) {
+function editExercise(exercise) {
     setExercise(exercise)
     router.push({ name: 'ExercisesEdit' });
 }
@@ -71,7 +71,7 @@ onMounted(() => {
 
         <div v-else class="table-container">
             <DataTable v-if="!loading" :data="list_exercises" :headers="['ID', 'NAME','SETS', 'REPS','WEIGHTS','EXAMPLE_LINK','UPDATED_AT', 'CREATED_AT']" class="custom-table"
-                @eliminar="eliminarExercise" @editar="editarExercise" />
+                @eliminar="deleteExercise" @editar="editExercise" />
 
             <p v-else >"Cargando..."</p>
         </div>

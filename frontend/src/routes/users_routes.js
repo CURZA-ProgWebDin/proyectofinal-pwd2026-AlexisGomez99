@@ -3,7 +3,7 @@ export const users = [{
     name: "Users",
     component: () => import("../views/UsersView.vue"),
     meta: {
-        rol_access: ["admin","entrenador"],
+        rol_access: ["admin","entrenador","creador"],
         required_auth: true,
         orden: 800,
         menu: true
@@ -14,7 +14,7 @@ export const users = [{
     component: () => import("../components/users/UsersCreate.vue"),
     name: "UsersCreate",
     meta: {
-        rol_access: ["admin"],
+        rol_access: ["admin","entrenador"],
         required_auth: true,
         orden: 801,
         menu: false

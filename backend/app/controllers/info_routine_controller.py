@@ -15,13 +15,13 @@ class InfoRoutineController (Controller):
             info_routines_to_dict = [info_routine.to_dict() for info_routine in info_routines_list ]
             return jsonify(info_routines_to_dict), 200 
         return jsonify({"message": 'datos no encontrados'}), 404
+    
     @staticmethod
-    def get_me(id) -> tuple[Response, int]:
-        info_routines_list = db.session.execute(db.select(InfoRoutine).filter_by(user_id=id).order_by(db.desc(InfoRoutine.id))).scalars().all()
-        if len(info_routines_list) > 0:
-            info_routines_to_dict = [info_routine.to_dict() for info_routine in info_routines_list ]
-            return jsonify(info_routines_to_dict), 200 
-        return jsonify({"message": 'datos no encontrados'}), 404
+    def get_info_from(id) -> tuple[Response, int]:
+        info_routines_list = db.session.execute(db.select(InfoRoutine).filter_by(routine_id=id).order_by(db.desc(InfoRoutine.id))).scalars().all()
+       
+        info_routines_to_dict = [info_routine.to_dict() for info_routine in info_routines_list ]
+        return jsonify(info_routines_to_dict), 200 
     
     @staticmethod
     def show(id)->tuple[Response, int]:
@@ -34,6 +34,11 @@ class InfoRoutineController (Controller):
     def create(request:dict) -> tuple[Response, int]:
         day= request.get('day')
         name_section= request.get('name_section')
+        description= request.get('description')
+        comment= request.get('comment')
+        sets= request.get('sets')
+        reps= request.get('reps')
+        weights= request.get('weights')
         exercise_id= request.get('exercise_id')
         routine_id= request.get('routine_id')
         error :str | None = None
@@ -41,6 +46,14 @@ class InfoRoutineController (Controller):
             error = 'El dia es requerido'
         if name_section is None:
             error = 'El nombre de la seccion es requerido'
+        if description is None:
+            error = 'La descripcion es requerida'
+        if sets is None:
+            error = 'Las series son requeridas'
+        if reps is None:
+            error = 'Las repeticiones son requeridas'
+        if weights is None:
+            error = 'El peso es requerido'
         if exercise_id is None:
             error = 'El ejercicio es requerido'
         if routine_id is None:
@@ -48,7 +61,15 @@ class InfoRoutineController (Controller):
             
         if error is None:
             try:
-                info_routine = InfoRoutine(day=day, name_section=name_section,exercise_id=exercise_id,routine_id=routine_id)
+                info_routine = InfoRoutine(day=day, 
+                                           name_section=name_section,
+                                           exercise_id=exercise_id,
+                                           routine_id=routine_id,
+                                           description=description,
+                                           comment=comment,
+                                           sets=sets,
+                                           reps=reps,
+                                           weights=weights)
                 db.session.add(info_routine)
                 db.session.commit()
                 return jsonify({'message': "informacion de rutina creada con exito"}), 201
@@ -62,17 +83,14 @@ class InfoRoutineController (Controller):
     def update(request, id)->tuple[Response, int]:
         day= request.get('day')
         name_section= request.get('name_section')
+        description= request.get('description')
+        comment= request.get('comment')
+        sets= request.get('sets')
+        reps= request.get('reps')
+        weights= request.get('weights')
         exercise_id= request.get('exercise_id')
         routine_id= request.get('routine_id')
         error :str | None = None
-        if day is None:
-            error = 'El dia es requerido'
-        if name_section is None:
-            error = 'El nombre de la seccion es requerido'
-        if exercise_id is None:
-            error = 'El ejercicio es requerido'
-        if routine_id is None:
-            error = 'La rutina es requerida'
             
         if error is None:
             info_routine = db.session.get(InfoRoutine, id)
@@ -80,6 +98,11 @@ class InfoRoutineController (Controller):
                 try:
                     info_routine.day = day
                     info_routine.name_section = name_section
+                    info_routine.comment = comment
+                    info_routine.description = description
+                    info_routine.sets = sets
+                    info_routine.reps = reps
+                    info_routine.weights = weights
                     info_routine.exercise_id = exercise_id
                     info_routine.routine_id = routine_id
                     info_routine.updated_at = datetime.now()

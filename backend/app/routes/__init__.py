@@ -5,7 +5,6 @@ from app.routes.exercise_routes import exercises
 from app.routes.info_routine_routes import info_routines
 from app.routes.info_user_routes import info_users
 from app.routes.payment_routes import payments
-from app.routes.user_routine_routes import user_routines
 from app.routes.routine_routes import routines
 
 from flask import Blueprint
@@ -19,5 +18,4 @@ api_v1.register_blueprint(exercises,url_prefix='/exercises')
 api_v1.register_blueprint(info_routines,url_prefix='/info_routines')
 api_v1.register_blueprint(info_users,url_prefix='/info_users')
 api_v1.register_blueprint(payments,url_prefix='/payments')
-api_v1.register_blueprint(user_routines,url_prefix='/user_routines')
 api_v1.register_blueprint(routines,url_prefix='/routines')

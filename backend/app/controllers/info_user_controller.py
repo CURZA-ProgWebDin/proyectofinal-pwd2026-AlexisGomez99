@@ -18,10 +18,21 @@ class InfoUserController (Controller):
     
     @staticmethod
     def show(id)->tuple[Response, int]:
-        info_user = db.session.get(InfoUser, id)
+        infouser = db.session.get(InfoUser, id)
+        if infouser:
+            return jsonify(infouser.to_dict()), 200
+        return jsonify({"message": 'informacion no encontrada'}), 404
+    
+    @staticmethod
+    def get_me(id) -> tuple[Response, int]:
+        query = db.select(InfoUser).filter_by(user_id=id).order_by(db.desc(InfoUser.id))
+        info_user = db.session.execute(query).scalar_one_or_none()
+        
         if info_user:
-            return jsonify(info_user.to_dict()), 200
-        return jsonify({"message": 'usuario no encontrado'}), 404
+            return jsonify(info_user.to_dict()), 200 
+            
+        return jsonify({"message": 'datos no encontrados'}), 404
+    
     
     @staticmethod
     def create(request:dict) -> tuple[Response, int]:
@@ -76,8 +87,6 @@ class InfoUserController (Controller):
             error = 'El numero es requerido'
         if adress is None:
             error = 'La direccion es requerida'
-        if user_id is None:
-            error = 'El user_id es requerido'
             
         if error is None:
             info_user = db.session.get(InfoUser, id)
@@ -88,7 +97,6 @@ class InfoUserController (Controller):
                     info_user.last_name = last_name
                     info_user.number_phone = number_phone
                     info_user.adress = adress
-                    info_user.user_id = user_id
                     info_user.updated_at = datetime.now()
                     
                     db.session.commit()

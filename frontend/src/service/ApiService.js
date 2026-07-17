@@ -15,7 +15,30 @@ class ApiService {
       this.errors.push(error.status);
     }
   }
-  
+  async getMe() {
+    try {
+      const data = await axios.get(this.url +"me");
+      return data;
+    } catch (error) {
+      this.errors.push(error.status);
+    }
+  }
+  async getRoutinesFrom(id) {
+    try {
+      const data = await axios.get(this.url +"me/"+id);
+      return data;
+    } catch (error) {
+      this.errors.push(error.status);
+    }
+  }
+  async getRoutine(id) {
+    try {
+      const data = await axios.get(this.url +"routine/"+id);
+      return data;
+    } catch (error) {
+      this.errors.push(error.status);
+    }
+  }
   async findOne(id) {
     const data = await axios
       .get(`${this.url}${id}`)

@@ -12,7 +12,7 @@ const props = defineProps({
   acciones: {
     type: Boolean,
     default: true,
-  },
+  }
 });
 
 const emits = defineEmits(["editar", "eliminar"]);
@@ -59,7 +59,7 @@ function editar(value) {
     <div v-if="items.length === 0" class="no-records">
       <h2>Registros no encontrados</h2>
     </div>
-    
+
     <table v-else class="modern-table">
       <thead>
         <tr>
@@ -71,6 +71,7 @@ function editar(value) {
         <tr v-for="(row, index) in items" :key="index">
           <td v-for="(cell, indexCell) in row" :key="indexCell">{{ cell }}</td>
           <td v-if="acciones" class="actions-cell">
+            <slot name="acciones-extra" :id="row[0]"></slot>
             <button class="btn btn-edit" @click="editar(row)" title="Editar">
               <mdicon name="pencil" size="18"></mdicon>
             </button>
@@ -113,8 +114,8 @@ function editar(value) {
 }
 
 th {
-  background-color: #0f172a; 
-  color: #94a3b8; 
+  background-color: #0f172a;
+  color: #94a3b8;
   padding: 12px 16px;
   font-weight: 700;
   font-size: 0.8rem;
@@ -131,7 +132,7 @@ td {
 }
 
 tr:hover td {
-  background-color: #243249; 
+  background-color: #243249;
   transition: background-color 0.15s ease;
 }
 
@@ -141,8 +142,8 @@ tr:hover td {
 
 .actions-cell {
   text-align: center;
-  white-space: nowrap; 
-  width: 100px; 
+  white-space: nowrap;
+  width: 100px;
 }
 
 .btn {
@@ -151,7 +152,7 @@ tr:hover td {
   justify-content: center;
   border: none;
   cursor: pointer;
-  padding: 6px; 
+  padding: 6px;
   border-radius: 4px;
   margin: 0 4px;
   transition: background-color 0.2s ease, transform 0.1s ease;

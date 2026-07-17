@@ -1,12 +1,16 @@
 import AuthService from "../service/AuthService";
 import { defineStore } from "pinia";
 import { ref } from "vue";
+import { router } from "../routes";
+import { useRouter } from "vue-router";
 
 export const useAuthStore = defineStore("auth", () => {
     const auth_user = ref(null);
+    const id = ref(null);
     const rol_user = ref("");
     const authenticated = ref(false);
     const jwt = ref("");
+    const router = useRouter();
     const service = new AuthService();
     const errors = ref([]);
     const status_code = ref(null);
@@ -14,6 +18,7 @@ export const useAuthStore = defineStore("auth", () => {
     async function login(user) {
         auth_user.value = await service.login(user);
         auth_user.value = service.auth_user.name;
+        id.value = service.auth_user.id;
         authenticated.value = service.auth_user.authenticated;
         jwt.value = service.auth_user.access_token;
         rol_user.value = service.auth_user.rol;
@@ -36,9 +41,11 @@ export const useAuthStore = defineStore("auth", () => {
             auth_user.value = data;
         }
     }
-
+    function goHome() {
+      router.push("/");
+    }
     return {
-        auth_user, rol_user, jwt, errors, status_code, authenticated, login, logout, register, getMe
+        auth_user, rol_user, jwt, id,errors, status_code, authenticated, login, logout, register, getMe, goHome
     }
 }, {
     persist: true

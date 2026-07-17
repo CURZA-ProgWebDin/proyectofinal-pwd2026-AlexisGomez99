@@ -25,13 +25,13 @@ const list_roles = computed(() => {
         });
     }
 });
-async function eliminarRol(rol) {
+async function deleteRol(rol) {
     loading.value= true;
     await destroy(rol.id);
     await list();
     loading.value= false;
 }
-function editarRol(rol) {
+function editRol(rol) {
     setRol(rol)
     router.push({ name: 'RolesEdit' });
 }
@@ -66,7 +66,7 @@ onMounted(() => {
 
         <div v-else class="table-container">
             <DataTable v-if="!loading" :data="list_roles" :headers="['ID', 'NAME','ACTIVE']" class="custom-table"
-                @eliminar="eliminarRol" @editar="editarRol" />
+                @eliminar="deleteRol" @editar="editRol" />
 
             <p v-else >"Cargando..."</p>
         </div>

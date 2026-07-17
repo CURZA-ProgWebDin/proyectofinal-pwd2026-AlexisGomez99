@@ -53,7 +53,7 @@ class AuthController:
             if user and user.validate_password(password):
                 access_token = create_access_token(identity=str(user.id), additional_claims={'rol': user.rol.name if user.rol else None})
                 return jsonify({'access_token': access_token,
-                                'rol': user.rol.name if user.rol else None, 'name': user.name, 'authenticated':True}), 200
+                                'rol': user.rol.name if user.rol else None, 'name': user.name, 'authenticated':True , 'id': user.id}), 200
             return jsonify({'message': "Credenciales inválidas"}), 401
         return jsonify ({'message': error}), 422
     
