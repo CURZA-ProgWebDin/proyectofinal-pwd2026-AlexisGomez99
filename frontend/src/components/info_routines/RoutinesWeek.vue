@@ -52,7 +52,9 @@ const groupedRoutine = computed(() => {
             has_real_data: item.sets !== "" || item.reps !== "" || item.weights !== "",
             real_sets: item.sets,
             real_reps: item.reps,
-            real_weights: item.weights
+            real_weights: item.weights,
+            description: item.description,
+            comment: item.comment
         };
 
         if (!groups[day]) {
@@ -149,7 +151,7 @@ function deleteInfoRoutine(exercise) {
                                 </thead>
                                 <tbody>
                                     <tr v-for="exercise in exercisesList" :key="exercise.id">
-                                        <td class="exercise-name">
+                                        <td class="exercise-name" :title="exercise.description ">
                                             {{ exercise.exercise_name }}
                                         </td>
                                         <td class="recommended-cell">
@@ -161,7 +163,7 @@ function deleteInfoRoutine(exercise) {
                                             </span>
                                         </td>
                                         <td>
-                                            <div v-if="exercise.has_real_data" class="real-data-badge">
+                                            <div v-if="exercise.has_real_data" class="real-data-badge" :title="exercise.comment ">
                                                 <mdicon name="check-circle" size="14" class="success-icon"></mdicon>
                                                 <span>
                                                     Realizado: <strong>{{ exercise.real_sets || 0 }}x{{
@@ -170,7 +172,7 @@ function deleteInfoRoutine(exercise) {
                                                     }}</span>
                                                 </span>
                                             </div>
-                                            <span v-else class="no-data-text">
+                                            <span v-else class="no-data-text" :title="exercise.comment ">
                                                 <mdicon name="pencil-outline" size="14" class="pencil-icon"></mdicon>
                                                 Sin registrar hoy
                                             </span>

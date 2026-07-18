@@ -17,3 +17,5 @@ Existe algun tipo de validator o podria hacer alguno manual? como seria la logic
 4. funciones a implementar en un futuro, compartir rutinas o copiar rutinas. Para que un entrenador no tenga que empezar una rutina desde 0 y pueda copiar una rutina similar y solo cambiar ciertos ejercicios.
 
 5. Los ejercicios tienen series, repeticiones y pesos que son solo recomendado o informacion. Esos pesos se suelen mostrar como recomendacion en las rutinas, en TODAS las rutinas. Y en info routine se almacena las marcas personales de cada persona. Esta bien planteado?
+
+6. Si borro una rutina en backend, deberia borrar en cascada todas las filas que tenga routine_id en info_routines?
