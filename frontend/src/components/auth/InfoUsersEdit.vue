@@ -25,7 +25,7 @@ async function editar() {
     <div class="form-container">
         <form @submit.prevent="editar" class="custom-form">
 
-            <button type="button" @click="router.push({ name: 'MyAccount' })" class="cancel-btn" title="Cancelar">
+            <button type="button" @click="router.back()" class="cancel-btn" title="Cancelar">
                 <mdicon name="close" size="18"></mdicon>
             </button>
 
@@ -45,11 +45,11 @@ async function editar() {
             </div>
             <div class="form-group">
                 <label>DIRECCION</label>
-                <input type="text" v-model="infoUserEdit.number_phone">
+                <input type="text" v-model="infoUserEdit.adress">
             </div>
             <div class="form-group">
                 <label>NUMERO DE TELEFONO</label>
-                <input type="text" v-model="infoUserEdit.adress">
+                <input type="text" v-model="infoUserEdit.number_phone">
             </div>
             <button type="submit" class="submit-btn">
                 ACEPTAR CAMBIOS

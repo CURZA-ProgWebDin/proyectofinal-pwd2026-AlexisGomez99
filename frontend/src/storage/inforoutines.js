@@ -19,7 +19,6 @@ export const useInfoRoutineStore = defineStore("inforoutines", () => {
     name_section: '',
     exercise_id: '',
     routine_id: '',
-    user_id: ''
   });
 
   async function listInfoRoutines() {
@@ -40,7 +39,6 @@ export const useInfoRoutineStore = defineStore("inforoutines", () => {
       infoRoutineEdit.day = data.day;
       infoRoutineEdit.name_section = data.name_section;
       infoRoutineEdit.exercise_id = data.exercise_id;
-      infoRoutineEdit.user_id = data.user_id;
       infoRoutineEdit.comment = data.comment;
       infoRoutineEdit.description = data.description;
       infoRoutineEdit.reps = data.reps;
@@ -59,7 +57,6 @@ export const useInfoRoutineStore = defineStore("inforoutines", () => {
       infoRoutineEdit.day = data.day;
       infoRoutineEdit.name_section = data.name_section;
       infoRoutineEdit.exercise_id = data.exercise_id;
-      infoRoutineEdit.user_id = data.user_id;
       infoRoutineEdit.comment = data.comment;
       infoRoutineEdit.description = data.description;
       infoRoutineEdit.reps = data.reps;
@@ -89,7 +86,6 @@ export const useInfoRoutineStore = defineStore("inforoutines", () => {
     infoRoutineEdit.day = inforoutine.day;
     infoRoutineEdit.name_section = inforoutine.name_section;
     infoRoutineEdit.exercise_id = inforoutine.exercise_id;
-    infoRoutineEdit.user_id = inforoutine.user_id;
     infoRoutineEdit.comment = inforoutine.comment;
     infoRoutineEdit.description = inforoutine.description;
     infoRoutineEdit.reps = inforoutine.reps;

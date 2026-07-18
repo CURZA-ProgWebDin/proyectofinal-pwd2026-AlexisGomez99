@@ -28,5 +28,15 @@ export const info_routines = [{
         orden: 402,
         menu: false
     }
+},{
+    path: "/info_routines/week/create/:id",
+    name: "InfoRoutinesWeekCreate",
+    component: () => import("../components/info_routines/RoutineCreate.vue"),
+    meta: {
+        rol_access: ["admin", "operador", "entrenador", "creador"],
+        required_auth: true,
+        orden: 403,
+        menu: false
+    }
 }];
 

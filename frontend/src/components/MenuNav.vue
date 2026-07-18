@@ -34,6 +34,8 @@ function myAccout(){
 </script>
 <template>
   <nav>
+    <div class="nav-spacer" v-if="authenticated"></div>
+
     <ul>
       <li v-for="(link, index) in links" :key="index">
         <router-link v-if="!link.meta.rol_access && !authenticated" :to="link.path">{{ link.name }}
@@ -67,16 +69,19 @@ function myAccout(){
 
 <style scoped>
 nav {
-  background-color: #1e2530; 
+  background-color: #1c2541;
   color: #f1f5f9;            
   display: flex;
-  justify-content: space-between; 
+  justify-content: flex-start; /* Alinea todo al inicio (izquierda) */
   align-items: center;
-  padding: 0 32px;
-  height: 70px;
-  border-bottom: 1px solid #2d3748;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-  font-family: 'Segoe UI', system-ui, sans-serif;
+  padding: 0 2rem;
+  height: 75px;
+  border-bottom: 1px solid #243056;
+  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.3);
+  font-family: system-ui, -apple-system, sans-serif;
+  position: relative; /* Mantiene la sección de usuario fija a la derecha */
+  width: 100%;
+  box-sizing: border-box;
 }
 
 ul {
@@ -85,32 +90,41 @@ ul {
   display: flex;
   align-items: center;
   list-style: none;
-  gap: 8px; 
+  gap: 12px;
+  margin-left: 4rem; /* El "empujón" hacia la derecha para que quede semi-centrado */
 }
 
 ul li a {
-  color: #94a3b8 !important;
+  color: #9ca3af !important;
   border-radius: 8px;
   text-decoration: none;
   font-size: 0.95rem;
-  font-weight: 500;
-  padding: 8px 16px;
+  font-weight: 600;
+  padding: 10px 20px;
   display: inline-block;
-  transition: all 0.25s ease;
+  letter-spacing: 0.03em;
+  transition: all 0.2s ease-in-out;
 }
 
 ul li a:hover {
-  background-color: #252f3f;
-  color: #f1f5f9 !important;
+  background-color: #243056;
+  color: #ffffff !important;
 }
 
 .router-link-active {
-  background-color: rgba(59, 130, 246, 0.1) !important;
-  color: #3b82f6 !important;                            
-  font-weight: 600;
+  background-color: rgba(16, 185, 129, 0.12) !important;
+  color: #10b981 !important;                     
+  font-weight: 700;
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  box-shadow: 0 0 15px rgba(16, 185, 129, 0.1);
 }
 
+/* La sección de usuario se queda fija a la derecha sin afectar la posición de la lista */
 .nav-user-section {
+  position: absolute;
+  right: 2rem;
+  top: 50%;
+  transform: translateY(-50%);
   display: flex;
   align-items: center;
   gap: 16px;
@@ -120,28 +134,30 @@ ul li a:hover {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 6px 14px;
+  padding: 8px 16px;
   border-radius: 30px;
   cursor: pointer;
-  border: 1px solid transparent;
+  background-color: #0b132b;
+  border: 1px solid #243056;
   transition: all 0.2s ease;
 }
 
 .user-profile-btn:hover {
-  background: #252f3f;
-  border-color: #2d3748;
+  background: #243056;
+  border-color: #3a4b7c;
+  transform: translateY(-1px);
 }
 
 .user-icon {
-  color: #3b82f6;
+  color: #10b981;
   display: flex;
   align-items: center;
 }
 
 .user-name {
-  color: #f1f5f9;
-  font-size: 0.95rem;
-  font-weight: 500;
+  color: #ffffff;
+  font-size: 0.9rem;
+  font-weight: 600;
 }
 
 .logout-btn {
@@ -149,7 +165,7 @@ ul li a:hover {
   border: none;
   color: #64748b;
   cursor: pointer;
-  padding: 8px;
+  padding: 10px;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -158,8 +174,8 @@ ul li a:hover {
 }
 
 .logout-btn:hover {
-  background: rgba(239, 68, 68, 0.1);
+  background: rgba(239, 68, 68, 0.12);
   color: #ef4444;
-  transform: scale(1.05);
+  transform: scale(1.08);
 }
 </style>

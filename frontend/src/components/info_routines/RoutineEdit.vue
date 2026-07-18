@@ -28,6 +28,7 @@ onMounted(async () => {
 
 
 async function editar() {
+    infoRoutineEdit.value.name_section = infoRoutineEdit.value.name_section.toUpperCase();
     await update(infoRoutineEdit.value);
     router.back();
 }
@@ -64,6 +65,10 @@ async function editar() {
                                 <div class="form-group">
                                     <label>PESO</label>
                                     <input type="text" v-model="infoRoutineEdit.weights" placeholder="Ej: 20kg">
+                                </div>
+                                <div class="form-group">
+                                    <label>NOMBRE DE LA SECCION</label>
+                                    <input type="text" v-model="infoRoutineEdit.name_section" placeholder="Ej: ESPALDA">
                                 </div>
                             </div>
 

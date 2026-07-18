@@ -61,7 +61,7 @@ onMounted(() => {
         </header>
 
         <main class="home-content">
-            <div v-if="rol_user === 'operador'" class="routines-section">
+            <div v-if="rol_user === 'operador' || rol_user === 'creador'" class="routines-section">
                 <div class="section-title-wrapper">
                     <mdicon name="dumbbell" size="22" class="title-icon"></mdicon>
                     <h3>Tus Rutinas Asignadas</h3>

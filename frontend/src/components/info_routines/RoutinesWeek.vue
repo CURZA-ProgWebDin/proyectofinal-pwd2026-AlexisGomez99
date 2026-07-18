@@ -18,7 +18,11 @@ const { getRoutine, setInfoRoutine } = infoRoutineStore;
 const { listExercises } = exerciseStore;
 
 const loading = ref(true);
+const activeDay = ref(null);
 
+const toggleDay = (day) => {
+    activeDay.value = activeDay.value === day ? null : day;
+}
 onMounted(async () => {
     await Promise.all([
         getRoutine(route.params.id),
@@ -65,7 +69,7 @@ const groupedRoutine = computed(() => {
 });
 
 function addInfoRoutine() {
-    console.log("Creando rutina...")
+    router.push({ name: 'InfoRoutinesWeekCreate', params: { id: route.params.id } })
 }
 
 function editarInfoRoutine(exercise) {
@@ -91,34 +95,44 @@ function deleteInfoRoutine(exercise) {
                 <mdicon name="dumbbell" size="48" class="empty-icon"></mdicon>
                 <h3>Esta rutina no tiene ejercicios</h3>
                 <p>Haz clic en el botón de abajo para empezar a añadir ejercicios a la rutina.</p>
-                <button @click="addInfoRoutine" class="btn-primary">
-                    Añadir Ejercicio
-                </button>
-                <button type="button" @click="router.back()" class="volver-btn" title="Volver">
-                    <mdicon name="arrow-left" size="18"></mdicon>
-                </button>
+                <div class="empty-actions">
+                    <button type="button" @click="router.back()" class="volver-btn" title="Volver">
+                        <mdicon name="arrow-left" size="18"></mdicon>
+                        <span>Volver</span>
+                    </button>
+                    <button @click="addInfoRoutine" class="btn-primary">
+                        Añadir Ejercicio
+                    </button>
+                </div>
             </div>
         </div>
 
         <div v-else class="routine-content">
             <div class="routine-header-actions">
-                <span class="routine-subtitle">Planificación semanal</span>
+                <div class="header-left">
+                    <button type="button" @click="router.back()" class="volver-btn" title="Volver">
+                        <mdicon name="arrow-left" size="18"></mdicon>
+                    </button>
+                    <span class="routine-subtitle">Planificación semanal</span>
+                </div>
                 <button @click="addInfoRoutine" class="btn-primary-sm">
                     <mdicon name="plus" size="16"></mdicon>
                     Agregar Ejercicio
                 </button>
-                <button type="button" @click="router.back()" class="volver-btn" title="Volver">
-                    <mdicon name="arrow-left" size="18"></mdicon>
-                </button>
             </div>
 
-            <div v-for="(sections, day) in groupedRoutine" :key="day" class="day-card">
-                <div class="day-header">
-                    <mdicon name="calendar-range" size="22" class="day-icon"></mdicon>
-                    <h2>{{ day }}</h2>
+            <div v-for="(sections, day) in groupedRoutine" :key="day" class="day-card" :class="{ 'day-card-active': activeDay === day }">
+                <div class="day-header" @click="toggleDay(day)" role="button" :aria-expanded="activeDay === day">
+                    <div class="day-header-left">
+                        <mdicon name="calendar-range" size="22" class="day-icon"></mdicon>
+                        <h2>{{ day }}</h2>
+                    </div>
+                    <div class="day-header-right">
+                        <mdicon :name="activeDay === day ? 'chevron-up' : 'chevron-down'" size="24" class="arrow-icon"></mdicon>
+                    </div>
                 </div>
 
-                <div class="day-body">
+                <div v-show="activeDay === day" class="day-body">
                     <div v-for="(exercisesList, section) in sections" :key="section" class="section-group">
                         <h3 class="section-title">{{ section }}</h3>
 
@@ -198,420 +212,289 @@ function deleteInfoRoutine(exercise) {
 
 <style scoped>
 .routines-week-container {
-    background-color: #0f172a;
-    min-height: 100vh;
-    padding: 40px 20px;
-    box-sizing: border-box;
-    font-family: 'Segoe UI', sans-serif;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  width: 90%;
+  max-width: 1000px;
+  margin: 2rem auto;
+  font-family: system-ui, -apple-system, sans-serif;
+  box-sizing: border-box;
 }
 
-.loading-state {
-    color: #f8fafc;
-    text-align: center;
-    padding: 60px;
-    font-size: 18px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 15px;
-}
-
-.spinner {
-    width: 40px;
-    height: 40px;
-    border: 4px solid rgba(16, 185, 129, 0.1);
-    border-top-color: #10b981;
-    border-radius: 50%;
-    animation: spin 1s infinite linear;
-}
-
-@keyframes spin {
-    to {
-        transform: rotate(360deg);
-    }
-}
-
-.empty-routine-card {
-    background: #1e293b;
-    border: 1px dashed #475569;
-    border-radius: 12px;
-    padding: 40px 20px;
-    text-align: center;
-    max-width: 500px;
-    width: 100%;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-}
-
-.empty-state-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 15px;
-}
-
-.empty-icon {
-    color: #64748b;
-}
-
-.empty-routine-card h3 {
-    color: #f8fafc;
-    margin: 0;
-    font-size: 20px;
-}
-
-.empty-routine-card p {
-    color: #94a3b8;
-    font-size: 14px;
-    margin: 0 0 10px 0;
-    line-height: 1.5;
-}
-
-/* --- CONTENEDOR DE ACCIONES DE CABECERA --- */
 .routine-header-actions {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    margin-bottom: -10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  gap: 1rem;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 }
 
 .routine-subtitle {
-    color: #94a3b8;
-    font-size: 14px;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #ffffff;
 }
 
-/* --- BOTONES PRINCIPALES --- */
-.btn-primary {
-    background-color: #10b981;
-    color: #0f172a;
-    border: none;
-    padding: 12px 24px;
-    border-radius: 6px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: background-color 0.2s;
+.volver-btn {
+  background-color: #1c2541;
+  border: 1px solid #243056;
+  color: #9ca3af;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
 }
-
-.btn-primary:hover {
-    background-color: #059669;
+.volver-btn:hover {
+  background-color: #243056;
+  color: #ffffff;
+  border-color: #3a4b7c;
 }
 
 .btn-primary-sm {
-    background-color: #10b981;
-    color: #0f172a;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 6px;
-    font-weight: 700;
-    font-size: 13px;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    transition: all 0.2s ease;
-    box-shadow: 0 4px 10px rgba(16, 185, 129, 0.15);
+  background-color: #10b981;
+  color: #0b132b;
+  border: none;
+  padding: 0.65rem 1.2rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
 }
-
 .btn-primary-sm:hover {
-    background-color: #059669;
-    transform: translateY(-1px);
-}
-
-.btn-primary-sm:active {
-    transform: translateY(0);
-}
-
-.routine-content {
-    width: 100%;
-    max-width: 950px;
-    display: flex;
-    flex-direction: column;
-    gap: 30px;
+  background-color: #059669;
 }
 
 .day-card {
-    background: #1e293b;
-    border: 1px solid #334155;
-    border-radius: 12px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
-    overflow: hidden;
+  background-color: #1c2541;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  margin-bottom: 1rem;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.day-card-active {
+  border-color: rgba(16, 185, 129, 0.3);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
 }
 
 .day-header {
-    background: #111827;
-    padding: 15px 25px;
-    border-bottom: 1px solid #334155;
-    display: flex;
-    align-items: center;
-    gap: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem 1.75rem;
+  background-color: #161f38;
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.2s;
+}
+.day-header:hover {
+  background-color: #1e294b;
 }
 
+.day-header-left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.day-header-left h2 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+  letter-spacing: 0.03em;
+}
 .day-icon {
-    color: #10b981;
+  color: #10b981;
 }
-
-.day-header h2 {
-    margin: 0;
-    color: #f8fafc;
-    font-size: 18px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 1px;
+.arrow-icon {
+  color: #6b7280;
+  transition: color 0.2s;
+}
+.day-header:hover .arrow-icon {
+  color: #ffffff;
 }
 
 .day-body {
-    padding: 25px;
-    display: flex;
-    flex-direction: column;
-    gap: 25px;
+  padding: 1.75rem;
+  background-color: #1c2541;
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
 }
 
 .section-group {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
 }
-
 .section-title {
-    margin: 0;
-    color: #10b981;
-    font-size: 14px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    border-left: 3px solid #10b981;
-    padding-left: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #9ca3af;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .table-wrapper {
-    border: 1px solid #334155;
-    border-radius: 8px;
-    overflow: hidden;
-    background-color: #0f172a;
+  border: 1px solid #243056;
+  border-radius: 8px;
+  overflow-x: auto;
+  background-color: #0b132b;
 }
-
 .exercises-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 14px;
-    text-align: left;
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  min-width: 700px;
 }
-
-.exercises-table th,
-.exercises-table td {
-    padding: 14px 18px;
-    color: #cbd5e1;
-    vertical-align: middle;
-}
-
 .exercises-table th {
-    background-color: #111827;
-    color: #94a3b8;
-    font-weight: 700;
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    border-bottom: 1px solid #334155;
+  background-color: #0f172a;
+  padding: 1rem;
+  color: #9ca3af;
+  font-weight: 600;
+  text-align: left;
+  border-bottom: 1px solid #243056;
 }
-
 .sub-th {
-    text-transform: lowercase;
-    font-size: 10px;
-    color: #64748b;
-    font-weight: normal;
+  font-size: 0.75rem;
+  color: #6b7280;
+  font-weight: 400;
 }
-
-.exercises-table tr:not(:last-child) td {
-    border-bottom: 1px solid #1e293b;
+.exercises-table td {
+  padding: 1rem;
+  border-bottom: 1px solid #1c2541;
+  color: #e5e7eb;
+  vertical-align: middle;
 }
 
 .exercise-name {
-    font-weight: 600;
-    color: #f8fafc;
-    width: 32%;
+  font-weight: 600;
+  color: #ffffff;
 }
-
-.recommended-cell {
-    width: 22%;
-}
-
 .highlight-rec {
-    color: #38bdf8;
-    font-weight: 700;
+  color: #10b981;
+  font-weight: 600;
 }
-
 .weight-rec {
-    color: #94a3b8;
-    font-size: 13px;
-    margin-left: 4px;
+  color: #9ca3af;
+  margin-left: 0.25rem;
 }
 
 .real-data-badge {
-    background-color: rgba(16, 185, 129, 0.1);
-    border: 1px solid rgba(16, 185, 129, 0.2);
-    color: #34d399;
-    padding: 6px 12px;
-    border-radius: 20px;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 13px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background-color: rgba(16, 185, 129, 0.1);
+  padding: 0.4rem 0.75rem;
+  border-radius: 6px;
+  color: #10b981;
+  font-size: 0.85rem;
 }
-
-.real-data-badge strong {
-    color: #f8fafc;
-}
-
-.success-icon {
-    color: #10b981;
-}
-
 .no-data-text {
-    color: #64748b;
-    font-size: 13px;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-style: italic;
-}
-
-.pencil-icon {
-    color: #475569;
-}
-
-.text-center {
-    text-align: center;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: #6b7280;
+  font-size: 0.85rem;
 }
 
 .video-link {
-    color: #ef4444;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    transition: color 0.2s, transform 0.1s;
+  color: #3b82f6;
+  display: inline-block;
+  transition: transform 0.15s;
 }
-
 .video-link:hover {
-    color: #f87171;
-    transform: scale(1.15);
+  transform: scale(1.1);
+  color: #60a5fa;
 }
-
 .no-video {
-    color: #334155;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    cursor: not-allowed;
+  color: #374151;
 }
 
-/* --- ESTILOS DE LA COLUMNA ACCIONES --- */
-.actions-header {
-    text-align: center;
-    width: 12%;
-    /* Ajustado el ancho para que quepan holgadamente dos botones */
-}
-
-.actions-cell {
-    text-align: center;
-}
-
+.actions-header { text-align: center !important; }
+.actions-cell { width: 100px; }
 .actions-wrapper {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    /* Espacio entre el botón de editar y eliminar */
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+}
+.btn-icon-edit, .btn-icon-delete {
+  background: none;
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+.btn-icon-edit { color: #f59e0b; }
+.btn-icon-edit:hover { background-color: rgba(245, 158, 11, 0.1); }
+.btn-icon-delete { color: #ef4444; }
+.btn-icon-delete:hover { background-color: rgba(239, 68, 68, 0.1); }
+
+.loading-state, .empty-routine-card {
+  background-color: #1c2541;
+  border-radius: 12px;
+  padding: 4rem 2rem;
+  text-align: center;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+.spinner {
+  border: 3px solid #243056;
+  border-top: 3px solid #10b981;
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+  margin: 0 auto 1rem;
+  animation: spin 1s linear infinite;
+}
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
-/* Estilo Base de Botones de Icono */
-.btn-icon-edit,
-.btn-icon-delete {
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    padding: 6px;
-    border-radius: 6px;
-    transition: background-color 0.2s, transform 0.1s, color 0.2s;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+.empty-state-content h3 { font-size: 1.3rem; color: #ffffff; margin: 1rem 0 0.5rem; }
+.empty-state-content p { color: #9ca3af; margin-bottom: 2rem; font-size: 0.95rem; }
+.empty-icon { color: #4b5563; }
+.empty-actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
 }
-
-/* Botón Editar (Verde) */
-.btn-icon-edit {
-    color: #10b981;
+.btn-primary {
+  background-color: #10b981;
+  color: #0b132b;
+  border: none;
+  padding: 0.75rem 1.75rem;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
 }
-
-.btn-icon-edit:hover {
-    background-color: rgba(16, 185, 129, 0.15);
-    transform: scale(1.05);
-}
-
-.btn-icon-edit:active {
-    transform: scale(0.95);
-}
-
-/* Botón Eliminar (Rojo destructivo) */
-.btn-icon-delete {
-    color: #64748b;
-    /* Gris apagado por defecto para que no grite 'atención' innecesariamente */
-}
-
-.btn-icon-delete:hover {
-    color: #f87171;
-    /* Rojo brillante al hacer hover */
-    background-color: rgba(239, 68, 68, 0.15);
-    transform: scale(1.05);
-}
-
-.btn-icon-delete:active {
-    transform: scale(0.95);
-}
-
-/* Responsividad */
-@media (max-width: 600px) {
-    .routine-header-actions {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 12px;
-        margin-bottom: 5px;
-    }
-
-    .btn-primary-sm {
-        width: 100%;
-        justify-content: center;
-    }
-}
-.volver-btn {
-    top: 16px;
-    right: 16px;
-    width: 32px;
-    height: 32px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #ef4444;
-    color: #f8fafc;
-    box-shadow: 0 4px 10px rgba(239, 68, 68, 0.25);
-    border: none;
-    padding: 12px 24px;
-    border-radius: 6px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: background-color 0.2s;
-}
-
-.volver-btn:hover {
-    background-color: #dc2626;
-}
-
-.volver-btn:active {
-    transform: scale(0.92);
+.empty-actions .volver-btn {
+  flex-direction: row;
+  width: auto;
+  padding: 0 1.2rem;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 600;
 }
 </style>
